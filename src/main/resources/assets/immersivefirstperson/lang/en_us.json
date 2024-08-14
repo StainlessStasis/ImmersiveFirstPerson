@@ -1,0 +1,11 @@
+{
+  "immersivefirstperson.configuration.sleepPitchRotation": "Sleeping Pitch Rotation",
+  "immersivefirstperson.configuration.cameraForwardOffset": "Camera Forward Offset",
+  "immersivefirstperson.configuration.cameraSidewaysOffset": "Camera Sideways Offset",
+  "immersivefirstperson.configuration.cameraUpwardOffset": "Camera Upward Offset",
+  "immersivefirstperson.configuration.renderBodyInF1": "Render In Cinematic Mode",
+  "immersivefirstperson.configuration.renderElytraWhenGlide": "Show Elytra When Gliding",
+  "immersivefirstperson.configuration.renderHead": "Show Head",
+  "immersivefirstperson.configuration.renderHat": "(WIP) Show Hat",
+  "immersivefirstperson.configuration.renderHelmet": "(WIP) Show Helmet"
+}
