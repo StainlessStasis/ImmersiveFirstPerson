@@ -6,7 +6,7 @@ Feel free to DM me on discord (stasis_the_shattered) for any questions or sugges
 This is my first published mod after only ~1 month of modding experience, but I tried my absolute hardest to make it the best I can.<br/>
 There are some small bugs and incompatibilties I have to fix, but the mod is pretty much fully working.<br/>
 <br/>
-##What I am aware of, and actively working on fixing:<br/>
+## What I am aware of, and actively working on fixing:<br/>
   -Camera is very jittery when getting near walls (but, it's at least better than clipping).<br/>
   -Fishing rod line does not render properly when riding certain entities (and boats when using Not Enough Animations).<br/>
   -Going from crawling/swimming/gliding to standing upright lets you momenterily see the body.<br/>
