@@ -13,8 +13,8 @@ There are some small bugs and incompatibilties I have to fix, but the mod is pre
   With that being said, the other mod is made by a very talented creator and made much better than mine, so go check it out as well! (if you somehow haven't already)<br/>
 <br/>
 ## What I am aware of, and actively working on fixing:<br/>
-  -Camera is very jittery when getting near walls (but, it's at least better than clipping).<br/>
   -Fishing rod line does not render properly when riding certain entities (and boats when using Not Enough Animations).<br/>
+  -Fishing rod line does not render properly when arm is swinging.<br/>
   -Going from crawling/swimming/gliding to standing upright lets you momenterily see the body.<br/>
   -Showing hat/helmet (disabled by default) does not offset in front of camera correctly. This one is a huge pain, but I do eventually want to fix it.<br/>
   Please let me know anything else that is broken, or any improvements that could be made!<br/>
