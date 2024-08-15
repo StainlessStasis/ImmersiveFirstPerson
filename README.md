@@ -1,6 +1,6 @@
 # ImmersiveFirstPerson
 Minecraft mod to render the player model in first person<br/>
-Tested on NeoForge 1.21 only<br/>
+Tested on NeoForge 1.21.1 only<br/>
 Feel free to DM me on discord (stasis_the_shattered) for any questions or suggestions<br/>
 <br/>
 This is my first published mod after only ~1 month of modding experience, but I tried my absolute hardest to make it the best I can.<br/>
