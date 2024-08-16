@@ -25,8 +25,10 @@ public abstract class HumanoidArmorLayerMixin<T extends LivingEntity, M extends 
 
     @Inject(method = "renderArmorPiece", at = @At("HEAD"), cancellable = true)
     private void renderArmorPiece(PoseStack pPoseStack, MultiBufferSource pBufferSource, T pLivingEntity, EquipmentSlot pSlot, int pPackedLight, A pModel, CallbackInfo ci) {
-        if (!(pLivingEntity instanceof Player player)) return;
         final Minecraft mc = Minecraft.getInstance();
+        if (pLivingEntity != mc.player || !(pLivingEntity instanceof Player player)) {
+            return;
+        }
         if (!mc.options.getCameraType().isFirstPerson()) return;
         // fake player means its the player being rendered in the inventory
         if (player.getData(ModAttachments.FAKE_PLAYER)) return;

@@ -12,8 +12,8 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.world.entity.HumanoidArm;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.SpyglassItem;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.gen.Invoker;
@@ -29,22 +29,28 @@ public abstract class PlayerRendererMixin extends LivingEntityRenderer<AbstractC
 
     @Inject(method = "render*", at = @At("HEAD"), cancellable = true)
     public void render(AbstractClientPlayer pEntity, float pEntityYaw, float pPartialTicks, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, CallbackInfo ci) {
-        immersiveFirstPerson$render(pEntity, pEntityYaw, pPartialTicks, pPoseStack, pBuffer, pPackedLight);
+        if (pEntity != Minecraft.getInstance().player) {
+            return;
+        }
+        immersiveFirstPerson$render(Minecraft.getInstance().player, pEntityYaw, pPartialTicks, pPoseStack, pBuffer, pPackedLight);
         ci.cancel();
     }
 
     @Unique
-    private void immersiveFirstPerson$render(AbstractClientPlayer pEntity, float pEntityYaw, float pPartialTicks, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight) {
-        invokeSetModelProperties(pEntity);
+    private void immersiveFirstPerson$render(AbstractClientPlayer player, float pEntityYaw, float pPartialTicks, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight) {
+        invokeSetModelProperties(player);
         final Minecraft mc = Minecraft.getInstance();
-        final Player player = mc.player;
-        if (player == null)
-            throw new NullPointerException("Somehow the player is null, and you can't render the body with a null player");
         final Options options = mc.options;
         if (options.getCameraType().isFirstPerson()) {
-            final boolean isFakePlayer = pEntity.getData(ModAttachments.FAKE_PLAYER);
+            final boolean isFakePlayer = player.getData(ModAttachments.FAKE_PLAYER);
             final boolean shouldRender = isFakePlayer || !options.hideGui || Config.renderBodyInF1;
             model.setAllVisible(shouldRender);
+
+            // test thing
+            Vec3 armPos = new Vec3(model.rightArm.x, model.rightArm.y, model.rightArm.z);
+            System.out.println("HAND POS: "+armPos);
+
+
             if (!shouldRender) {
                 return;
             }
@@ -68,9 +74,9 @@ public abstract class PlayerRendererMixin extends LivingEntityRenderer<AbstractC
         }
 
         final PlayerRenderer renderer = ((PlayerRenderer)(Object)this);
-        if (net.neoforged.neoforge.common.NeoForge.EVENT_BUS.post(new net.neoforged.neoforge.client.event.RenderPlayerEvent.Pre(pEntity, renderer, pPartialTicks, pPoseStack, pBuffer, pPackedLight)).isCanceled()) return;
-        super.render(pEntity, pEntityYaw, pPartialTicks, pPoseStack, pBuffer, pPackedLight);
-        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.post(new net.neoforged.neoforge.client.event.RenderPlayerEvent.Post(pEntity, renderer, pPartialTicks, pPoseStack, pBuffer, pPackedLight));
+        if (net.neoforged.neoforge.common.NeoForge.EVENT_BUS.post(new net.neoforged.neoforge.client.event.RenderPlayerEvent.Pre(player, renderer, pPartialTicks, pPoseStack, pBuffer, pPackedLight)).isCanceled()) return;
+        super.render(player, pEntityYaw, pPartialTicks, pPoseStack, pBuffer, pPackedLight);
+        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.post(new net.neoforged.neoforge.client.event.RenderPlayerEvent.Post(player, renderer, pPartialTicks, pPoseStack, pBuffer, pPackedLight));
     }
 
     @Invoker("setModelProperties")

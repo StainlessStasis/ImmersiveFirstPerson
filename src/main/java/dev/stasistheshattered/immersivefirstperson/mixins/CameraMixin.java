@@ -4,6 +4,8 @@ import dev.stasistheshattered.immersivefirstperson.Config;
 import dev.stasistheshattered.immersivefirstperson.utils.Vec3Utils;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
@@ -31,12 +33,14 @@ public abstract class CameraMixin {
     @Shadow public abstract float getXRot();
     @Shadow public abstract float getRoll();
 
+    @Shadow private float partialTickTime;
     @Unique Vec3 attachedCameraPos = new Vec3(0, 0, 0);
     @Unique private boolean collisionDetected = false;
 
     // Used to interpolate the camera offset when using a shield
     @Unique private boolean alreadyInterpolated = false;
     @Unique private int interpolationTicksRemaining = 0;
+
 
     @Inject(method = "setup", at = @At("TAIL"), cancellable = true)
     public void setup(BlockGetter pLevel, Entity pEntity, boolean pDetached, boolean pThirdPersonReverse, float pPartialTick, CallbackInfo ci) {
@@ -73,8 +77,6 @@ public abstract class CameraMixin {
             interpolationTicksRemaining--;
             if (interpolationTicksRemaining <= 0 && !alreadyInterpolated) {
                 interpolationTicksRemaining = 5 + (int)(2.5d * (mc.options.framerateLimit().get()/60d));
-//                System.out.println("fps limit: "+mc.options.framerateLimit());
-//                System.out.println("interpolation thing: "+interpolationTicksRemaining);
                 alreadyInterpolated = true;
             }
 
@@ -91,7 +93,7 @@ public abstract class CameraMixin {
         double sidewaysOffset = Config.cameraSidewaysOffset;
         Vec3 sideways = new Vec3(-headDirectionPitchLocked.z(), 0, headDirectionPitchLocked.x());
         Vec3 offset = Vec3Utils.clone(headDirectionPitchLocked).multiply(cameraForwardOffset, 0d, cameraForwardOffset)
-                .add(sideways.multiply(sidewaysOffset, 0d, sidewaysOffset)) // Apply the sideways offset
+                .add(sideways.multiply(sidewaysOffset, 0d, sidewaysOffset))
                 .add(0d, Config.cameraUpwardOffset, 0d);
 
         Vec3 newCameraPos = immersiveFirstPerson$calculateCameraPosition(player, offset);
@@ -113,21 +115,41 @@ public abstract class CameraMixin {
         Vec3 adjustedPos = cameraPos.add(offset);
 
         BlockHitResult result = world.clip(new ClipContext(cameraPos, adjustedPos, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, player));
-        adjustedPos = result.getLocation();
+        final Vec3 hitLoc = result.getLocation();
+        final float directionYaw = result.getDirection().toYRot();
+//        System.out.println("direction yaw: "+directionYaw);
+        adjustedPos = hitLoc;
 
-        AABB cameraBox = new AABB(adjustedPos.subtract(0.25, 0.25, 0.25), adjustedPos.add(0.25, 0.25, 0.25));
+        // don't ask, it just works
+        final double yawDif = directionYaw - Math.abs(player.getViewYRot(partialTickTime));
+        final double distanceCheck = Mth.square(Vec3Utils.greatestAbsoluteValue(offset)) * (Math.abs(yawDif)/32);
+        double offsetX = offset.x;
+        double offsetY = offset.y;
+        double offsetZ = offset.z;
+
+        AABB cameraBox = new AABB(adjustedPos.subtract(offsetX, offsetY, offsetZ), adjustedPos.add(offsetX, offsetY, offsetZ));
         Iterable<VoxelShape> blockCollisions = world.getBlockCollisions(player, cameraBox);
         for (VoxelShape shape : blockCollisions) {
             if (!shape.isEmpty() && shape.bounds().intersects(cameraBox)) {
+//                System.out.println("COLLISION");
                 collisionDetected = true;
 
                 // Adjust camera pos when collision
-                double adjustmentFactor = 0.25;
-                while (shape.bounds().intersects(cameraBox) && adjustmentFactor > 0) {
-                    adjustedPos = cameraPos.add(offset.scale(adjustmentFactor));
-                    cameraBox = new AABB(adjustedPos.subtract(0.1, 0.1, 0.1), adjustedPos.add(0.1, 0.1, 0.1));
-                    adjustmentFactor -= 0.01; // Slowly reduce until no more collision
+                double adjustmentFactor = 0.99;
+                final double scalar = 0.01;
+                while ((shape.bounds().intersects(cameraBox) || adjustedPos.distanceToSqr(hitLoc) <= distanceCheck) && adjustmentFactor > 0) {
+//                    System.out.println("ADJUSTMENT FACTOR: "+adjustmentFactor);
+//                    System.out.println("DISTANCE: "+adjustedPos.distanceToSqr(hitLoc));
+//                    System.out.println("DISTANCE CHECK: "+distanceCheck);
+//                    System.out.println("TRUE?: "+(adjustedPos.distanceToSqr(hitLoc) <= distanceCheck));
+                    adjustedPos = cameraPos.add(Vec3Utils.clone(offset).scale(adjustmentFactor));
+                    offsetX -= offset.x * scalar;
+                    offsetY -= offset.y * scalar;
+                    offsetZ -= offset.z * scalar;
+                    cameraBox = new AABB(adjustedPos.subtract(offsetX, offsetY, offsetZ), adjustedPos.add(offsetX, offsetY, offsetZ));
+                    adjustmentFactor -= scalar; // Slowly reduce until no more collision
                 }
+//                System.out.println("LOOP BROKEN");
                 break;
             }
         }

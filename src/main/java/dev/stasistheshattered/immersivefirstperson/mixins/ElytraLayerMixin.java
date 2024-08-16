@@ -20,8 +20,8 @@ public class ElytraLayerMixin<T extends LivingEntity, M extends EntityModel<T>> 
     public void render(PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, T pLivingEntity, float pLimbSwing,
                        float pLimbSwingAmount, float pPartialTicks, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch, CallbackInfo ci) {
 
-        if (!(pLivingEntity instanceof Player player)) return;
         final Minecraft mc = Minecraft.getInstance();
+        if (pLivingEntity != mc.player || !(pLivingEntity instanceof Player player)) return;
         if (!mc.options.getCameraType().isFirstPerson()) return;
         // fake player means its the player being rendered in the inventory
         final boolean isFakePlayer = player.getData(ModAttachments.FAKE_PLAYER);
