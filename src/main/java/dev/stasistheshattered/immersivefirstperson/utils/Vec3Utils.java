@@ -18,4 +18,8 @@ public class Vec3Utils {
                 0.0f,
                 (float) Math.cos(yawRadians)).normalize();
     }
+
+    public static double greatestAbsoluteValue(Vec3 vector) {
+        return Math.max(Math.abs(vector.x), Math.max(Math.abs(vector.y), Math.abs(vector.z)));
+    }
 }
