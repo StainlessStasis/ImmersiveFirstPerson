@@ -1,7 +1,6 @@
 # ImmersiveFirstPerson
 Minecraft mod to render the player model in first person<br/>
 Tested on NeoForge 1.21.1 only<br/>
-Download: https://modrinth.com/mod/immersivefirstperson<br/>
 Feel free to DM me on discord (stasis_the_shattered) for any questions or suggestions<br/>
 <br/>
 This is my first published mod after only ~1 month of modding experience, but I tried my absolute hardest to make it the best I can.<br/>
@@ -15,9 +14,7 @@ There are some small bugs and incompatibilties I have to fix, but the mod is pre
 <br/>
 ## What I am aware of, and actively working on fixing:<br/>
   -Fishing rod line does not render properly when riding certain entities (and boats when using Not Enough Animations).<br/>
-  -Fishing rod line does not render properly when arm is swinging.<br/>
-  -Going from crawling/swimming/gliding to standing upright lets you momenterily see the body.<br/>
-  -Showing hat/helmet (disabled by default) does not offset in front of camera correctly. This one is a huge pain, but I do eventually want to fix it.<br/>
+  -Camera is still slightly buggy/jittery when colliding with blocks.<br/>
   Please let me know anything else that is broken, or any improvements that could be made!<br/>
 <br/>
 ## Does this mod support other popular mods, such as Not Enough Animations?<br/>
