@@ -17,5 +17,7 @@ public class ClientEvents {
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
         player.setData(ModAttachments.FAKE_PLAYER, false);
+        player.setData(ModAttachments.RIGHT_HAND_PITCH, 0f);
+        player.setData(ModAttachments.LEFT_HAND_PITCH, 0f);
     }
 }

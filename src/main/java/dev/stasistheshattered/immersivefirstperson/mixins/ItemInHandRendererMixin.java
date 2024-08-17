@@ -28,8 +28,10 @@ public abstract class ItemInHandRendererMixin {
 
     @Inject(method = "renderHandsWithItems", at = @At("HEAD"), cancellable = true)
     public void renderHandsWithItems(float pPartialTicks, PoseStack pPoseStack, MultiBufferSource.BufferSource pBuffer, LocalPlayer pPlayerEntity, int pCombinedLight, CallbackInfo ci) {
-        immersiveFirstPerson$renderHandsWithItems(pPartialTicks, pPoseStack, pBuffer, pPlayerEntity, pCombinedLight);
-        ci.cancel();
+        if (pPlayerEntity == Minecraft.getInstance().player) {
+            immersiveFirstPerson$renderHandsWithItems(pPartialTicks, pPoseStack, pBuffer, pPlayerEntity, pCombinedLight);
+            ci.cancel();
+        }
     }
 
     @Inject(method = "renderItem", at = @At("HEAD"), cancellable = true)
@@ -42,8 +44,6 @@ public abstract class ItemInHandRendererMixin {
     private void immersiveFirstPerson$renderHandsWithItems(float pPartialTicks, PoseStack pPoseStack, MultiBufferSource.BufferSource pBuffer, LocalPlayer pPlayerEntity, int pCombinedLight) {
         final Minecraft mc = Minecraft.getInstance();
         final Player player = mc.player;
-        if (player == null)
-            throw new NullPointerException("Somehow the player is null and you can't render the body with a null player");
 
         if (!mc.options.getCameraType().isFirstPerson()) return;
         // Fix rendering 2 bodies at once when using camera offsets
@@ -94,7 +94,8 @@ public abstract class ItemInHandRendererMixin {
         // Don't render spyglass in hand when using it
         // i tried making this shit only hide the one in the hand using it
         // but for some reason pLeftHand is ALWAYS false in the if statement below
-        if (pEntity instanceof Player player && player.isScoping() && pItemStack.getItem() instanceof SpyglassItem) {
+        Player player = Minecraft.getInstance().player;
+        if (player != null && pEntity == player && player.isScoping() && pItemStack.getItem() instanceof SpyglassItem) {
             return;
         }
         if (!pItemStack.isEmpty()) {
