@@ -16,6 +16,7 @@ There are some small bugs and incompatibilties I have to fix, but the mod is pre
 ## What I am aware of, and actively working on fixing:<br/>
   -Fishing rod line does not render properly when riding certain entities (and boats when using Not Enough Animations).<br/>
   -Camera is still slightly buggy/jittery when colliding with blocks.<br/>
+  -Wearable heads are not hidden.<br/>
   Please let me know anything else that is broken, or any improvements that could be made!<br/>
 <br/>
 ## Does this mod support other popular mods, such as Not Enough Animations?<br/>
