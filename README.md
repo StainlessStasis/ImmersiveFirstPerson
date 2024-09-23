@@ -8,7 +8,7 @@ This is my first published mod after only ~1 month of modding experience, but I 
 There are some small bugs and incompatibilties I have to fix, but the mod is pretty much fully working.<br/>
 <br/>
 ## IMPORTANT UPDATE:<br/>
-I will be gone until September 20th and will be somewhat busy so I will not release any more updates until probably late September/beginning of October.<br/>
+I will be gone until September 20th (back now) and will be somewhat busy so I will not release any more updates until probably late September/beginning of October.<br/>
 ## Why does this mod exist when there is already a very popular, well-known first person mod?<br/>
   -Short answer: I wanted to improve some aspects of it for my own personal use, and use it as a learning experience.<br/>
   -Long answer: Some things really bugged me about that mod, mostly the camera position and the swimming. The swimming animation in this mod always displays the arms in front of you no matter your rotation. The camera is also highly customizable in all 3 directions (no 
